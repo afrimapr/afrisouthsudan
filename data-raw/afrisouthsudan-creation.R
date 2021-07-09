@@ -33,6 +33,7 @@ sf1 <- st_read(filename, layer=layernames[1])
 mapview(sf1)
 
 # copied layer names & descriptions from googlesheet
+
 # saved to inst\\extdata\\ssd-layer-description-lookup.csv
 # ssd_admn_ad0_py_s0_c19ihdp_pp,Country boundary
 # ssd_admn_ad1_py_s0_c19ihdp_pp,State boundary
@@ -48,8 +49,12 @@ mapview(sf1)
 # ssd_tran_poi_pt_s0_c19ihdp_pp,Transport points of interest
 # ssd_tran_air_ln_s0_c19ihdp_pp_unhas,United Nations humanitarian air service routes
 
+# I added a shortdescription column named 'content' that can be used e.g. to select layers
+# TODO I could also add a field for the primary attribute column to be used in default mapview maps!
+
 lookupname <- system.file("extdata","ssd-layer-description-lookup.csv", package="afrisouthsudan", mustWork=TRUE)
 
 dflayers <- read.csv(lookupname)
+
 
 
