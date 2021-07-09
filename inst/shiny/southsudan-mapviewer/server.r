@@ -1,18 +1,17 @@
-# afriadmin/afriadmin-compare/server.r
-# to compare different admin boundaries for the same country (diff. sources and resolutions)
-
-# initially copied from afrihealthsites/healthsites_viewer2
-
-# TODO could add mapshaper to be able to simplify boundaries on the fly
+# afrisouthsudan/southsudan-mapviewer/server.r
+# to view southsudan data to inform covax planning
 
 
 #global variables
 
+#TODO later probably store this as data in the package
+lookupname <- system.file("extdata","ssd-layer-description-lookup.csv", package="afrisouthsudan", mustWork=TRUE)
+dflayers <- read.csv(lookupname)
+
+filename <- system.file("extdata","ssd_ihdp_c19_s0_pp.gpkg", package="afrisouthsudan", mustWork=TRUE)
+
 # to try to allow retaining of map zoom, when selections are changed
 zoom_view <- NULL
-# when country is changed I want whole map to change
-# but with other options (e.g. boundary type) I want to retain zoom
-# perhaps can just reset zoomed view to NULL when country is changed
 
 
 # Define a server for the Shiny app
@@ -24,22 +23,13 @@ function(input, output) {
   output$serve_map <- renderLeaflet({
 
     #avoid problems at start
-    if (length(input$adm_lvl) == 0) return(NULL)
+    if (length(input$layercontent) == 0) return(NULL)
 
-    mapplot <- compareadmin(input$country,
-                            level=input$adm_lvl,
-                            datasource = c('geoboundaries','gadm'),
-                            type = c(input$type, NULL),
-                            plot = 'mapview',
-                            plotshow = FALSE
-    )
+    layername <- dflayers$name[which(dflayers$content==input$layercontent)]
 
-    #creating side-by-side slider view
-    #found that this error was known to others & should be fixed by dev version of mapview
-    #remotes::install_github("r-spatial/mapview")
-    #Warning: Error in value[[3L]]: Couldn't normalize path in `addResourcePath`, with arguments: `prefix` = 'PopupTable-0.0.1'; `directoryPath` = ''
-    #did work from console
-    #mapplot <- mapplot1 | mapplot2
+    sflayer <- sf::st_read(filename, layer=layername)
+
+    mapplot <- mapview(sflayer)
 
 
     # to retain zoom if only types have been changed
@@ -56,19 +46,14 @@ function(input, output) {
   })
 
   ################################################################################
-  # dynamic selectable list of admin levels based on country
-  output$select_lvl <- renderUI({
+  # dynamic selectable list of layers in the geopackage
+  output$select_layer <- renderUI({
 
-    # get max for each datasource
-    max_gadm <- afriadmin::maxadmin(input$country, datasource='gadm')
-    max_geob <- afriadmin::maxadmin(input$country, datasource='geoboundaries')
 
-    max_lvl <- max(c(max_gadm,max_geob))
-
-    radioButtons("adm_lvl", label = "admin level",
-                 choices = c(1:max_lvl),
-                 inline = TRUE, #horizontal
-                 selected = 1)
+    radioButtons("layercontent", label = "layer to view",
+                 choices = dflayers$content,
+                 #inline = TRUE, #horizontal
+                 selected = dflayers$content[1])
   })
 
 
@@ -91,37 +76,20 @@ function(input, output) {
   })
 
 
-  ###################################
-  # to update map without resetting everything use leafletProxy
-  # see https://rstudio.github.io/leaflet/shiny.html
-  # Incremental changes to the map should be performed in
-  # an observer. Each independent set of things that can change
-  # should be managed in its own observer.
-  # BUT I don't quite know how to use with a mapview map ...
-  # observe({
-  #   #pal <- colorpal()
-  #   # leafletProxy("map", data = filteredData()) %>%
-  #   #   clearShapes() %>%
-  #   #   addCircles(radius = ~10^mag/10, weight = 1, color = "#777777",
-  #   #              fillColor = ~pal(mag), fillOpacity = 0.7, popup = ~paste(mag)
-  #   #  )
-  # })
-
-
-
-
   ###########################
   # table of admin unit names from the 2 sources
   output$table_names <- DT::renderDataTable({
 
-    #want to avoid downloading the data again,
-    #but hopefully it will have been cached locally so won't download again
+    #TODO want to avoid reading in the layer again
+    #BEWARE this won't work if I allow multiple layers to be displayed
 
-    #beware this just uses single type so far
-    dfnames <- compareadmin(input$country, level=input$adm_lvl, type=input$type, plot='namestable')
+    #avoid problems at start
+    if (length(input$layercontent) == 0) return(NULL)
+    layername <- dflayers$name[which(dflayers$content==input$layercontent)]
+    sflayer <- sf::st_read(filename, layer=layername)
 
 
-    DT::datatable(dfnames, options = list(pageLength = 50))
+    DT::datatable(sflayer, options = list(pageLength = 50))
   })
 
 
