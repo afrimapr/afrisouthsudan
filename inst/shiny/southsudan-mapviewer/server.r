@@ -88,6 +88,8 @@ function(input, output) {
     layername <- dflayers$name[which(dflayers$content==input$layercontent)]
     sflayer <- sf::st_read(filename, layer=layername)
 
+    # drop the geometry column - not wanted in table
+    sflayer <- sf::st_drop_geometry(sflayer)
 
     DT::datatable(sflayer, options = list(pageLength = 50))
   })
