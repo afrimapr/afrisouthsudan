@@ -25,11 +25,14 @@ function(input, output) {
     #avoid problems at start
     if (length(input$layercontent) == 0) return(NULL)
 
-    layername <- dflayers$name[which(dflayers$content==input$layercontent)]
+    layernum <- which(dflayers$content==input$layercontent)
+    layername <- dflayers$name[layernum]
+    layertypecol <- dflayers$type_column[layernum]
+    layerlabelcol <- dflayers$label_column[layernum]
 
     sflayer <- sf::st_read(filename, layer=layername)
 
-    mapplot <- mapview(sflayer)
+    mapplot <- mapview(sflayer, zcol=layertypecol, label=paste(sflayer[[layerlabelcol]]))
 
 
     # to retain zoom if only types have been changed
