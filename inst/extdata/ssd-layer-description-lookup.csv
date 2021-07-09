@@ -1,14 +1,14 @@
-name,content,description
-ssd_admn_ad0_py_s0_c19ihdp_pp,Country boundary,Country (adm0) boundary
-ssd_admn_ad1_py_s0_c19ihdp_pp,State boundary,State (adm1) boundary
-ssd_admn_ad2_py_s0_c19ihdp_pp,County boundary,County (adm2) boundary
-ssd_tran_air_pt_s0_c19ihdp_pp,Airports,Airports
-ssd_heal_med_pt_s0_c19ihdp_pp,Health facilities,Medical facilities
-ssd_tran_net_ln_s0_c19ihdp_pp,Major roads & rivers,Major roads and rivers
-ssd_tran_rds_ln_s0_c19ihdp_pp,Roads,Roads
-ssd_pois_poi_pt_s0_c19ihdp_pp,Points of interest,General points of interest
-ssd_stle_stl_pt_s0_c19ihdp_pp,Settlements,Settlements
-ssd_stle_stl_pt_s0_c19ihdp_pp_dist,Settlement distances to transport,Settlements including the distance of the settlements population to the nearest road hospital airport and river
-ssd_phys_riv_ln_s0_c19ihdp_pp,Rivers,Rivers
-ssd_tran_poi_pt_s0_c19ihdp_pp,Transport points,Transport points of interest
-ssd_tran_air_ln_s0_c19ihdp_pp_unhas,UN air routes,United Nations humanitarian air service routes
+name,content,description,type_column,label_column
+ssd_admn_ad0_py_s0_c19ihdp_pp,Country boundary,Country (adm0) boundary,adm0_name,adm0_name
+ssd_admn_ad1_py_s0_c19ihdp_pp,State boundary,State (adm1) boundary,pop_61plus,adm1_name
+ssd_admn_ad2_py_s0_c19ihdp_pp,County boundary,County (adm2) boundary,pop_61plus,adm2_name
+ssd_tran_air_pt_s0_c19ihdp_pp,Airports,Airports,type,name
+ssd_heal_med_pt_s0_c19ihdp_pp,Health facilities,Medical facilities,local_type,local_name
+ssd_tran_net_ln_s0_c19ihdp_pp,Major roads & rivers,Major roads and rivers,type,name
+ssd_tran_rds_ln_s0_c19ihdp_pp,Roads,Roads,type,name
+ssd_pois_poi_pt_s0_c19ihdp_pp,Points of interest,General points of interest,type,name
+ssd_stle_stl_pt_s0_c19ihdp_pp,Settlements,Settlements,type,name_en
+ssd_stle_stl_pt_s0_c19ihdp_pp_dist,Settlement distances to transport,Settlements including the distance of the settlements population to the nearest road hospital airport and river,distance_hf,name_en
+ssd_phys_riv_ln_s0_c19ihdp_pp,Rivers,Rivers,navigation,name
+ssd_tran_poi_pt_s0_c19ihdp_pp,Transport points,Transport points of interest,type,name
+ssd_tran_air_ln_s0_c19ihdp_pp_unhas,UN air routes,United Nations humanitarian air service routes,operatedby,name
