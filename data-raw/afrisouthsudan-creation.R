@@ -15,4 +15,6 @@ usethis::use_data_raw()
 
 #mkdir("inst//extdata")
 
-# copy geopackage into inst//extdata
+# copy geopackage into inst//extdata//ssd_ihdp_c19_s0_pp.gpkg
+
+use_package("sf", "Imports")
