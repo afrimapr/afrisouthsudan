@@ -18,3 +18,20 @@ usethis::use_data_raw()
 # copy geopackage into inst//extdata//ssd_ihdp_c19_s0_pp.gpkg
 
 use_package("sf", "Imports")
+use_package("mapview", "Suggests")
+
+# RStudio, Build, Install & Restart
+
+filename <- system.file("extdata","ssd_ihdp_c19_s0_pp.gpkg", package="afrisouthsudan", mustWork=TRUE)
+
+library(sf)
+layers <- sf::st_layers(filename)
+layernames <- layers$name
+
+sf1 <- st_read(filename, layer=layernames[1])
+
+mapview(sf1)
+
+
+
+
