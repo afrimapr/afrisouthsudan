@@ -32,7 +32,7 @@ function(input, output) {
 
     sflayer <- sf::st_read(filename, layer=layername)
 
-    mapplot <- mapview(sflayer, zcol=layertypecol, label=paste(sflayer[[layerlabelcol]]))
+    mapplot <- mapview(sflayer, zcol=layertypecol, label=layerlabelcol)
 
 
     # to retain zoom if only types have been changed
