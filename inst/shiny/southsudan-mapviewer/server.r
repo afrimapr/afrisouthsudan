@@ -32,10 +32,9 @@ function(input, output) {
   # mapview interactive leaflet map plot
   output$serve_map <- renderLeaflet({
 
-    #cat("HERE layernum, name:",layernum,layername," selected col: ",input$column_selected)
-
     #avoid problems at start
-    if (is.null(sfloadedlayer)) return(NULL)
+    #BEWARE I think this may have created issues
+    #if (is.null(sfloadedlayer)) return(NULL)
 
     # did have problem that when changing the layer
     # this code initially tries to map the new layer
@@ -56,14 +55,19 @@ function(input, output) {
 
     zcol <- input$column_selected
     label <- layerlabelcol
-    #layer.name <- paste(layername,zcol)
+    #BEWARE having a : in the layername stopped map from rendering
+    layer.name <- paste(dflayers$content[layernum]," - ",zcol)
 
-    mapplot <- mapview(sfloadedlayer, zcol=zcol, label=label)
+    cat("HERE layernum, name:",layernum,layername," selected col: ",input$column_selected,"layer.name",layer.name,"\n")
 
-    #ARG!! it was working, now not
-    #ans seemingly all I did was make these small layer.name changes ????
+
+    #mapplot <- mapview(sfloadedlayer, zcol=zcol, label=label)
+
+    #ARG!! it was working, now not, then yes, then not
+    #currently works in browser, but not direct from RStudio
+
+    mapplot <- mapview(sfloadedlayer, zcol=zcol, label=label, layer.name=layer.name)
     #mapplot <- mapview(sfloadedlayer, zcol=zcol, label=label, layer.name="test")
-
 
     # to retain zoom if only types have been changed
     if (!is.null(zoom_view))
