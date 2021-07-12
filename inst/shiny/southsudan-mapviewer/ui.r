@@ -32,9 +32,11 @@ fluidPage(
 
 
                   #user can select which layer to display
-                  #TODO allow multiple layers to be selected
+                  #TODO consider allowing multiple layers to be selected
+
                   uiOutput("select_layer"),
 
+                  uiOutput("select_column"),
 
                   # selectInput("type", label = "geoboundaries type",
                   #             choices = c("simple (sscu)"="sscu", "precise (hpscu)"="hpscu", "simple standard (sscgs)"="sscgs", "precise standard (hpscgs)"="hpscgs"),
