@@ -66,8 +66,10 @@ function(input, output) {
     #ARG!! it was working, now not, then yes, then not
     #currently works in browser, but not direct from RStudio
 
-    mapplot <- mapview(sfloadedlayer, zcol=zcol, label=label, layer.name=layer.name)
-    #mapplot <- mapview(sfloadedlayer, zcol=zcol, label=label, layer.name="test")
+    mapplot <- mapview(sfloadedlayer, zcol=zcol, label=label,
+                       layer.name=layer.name,
+                       map.types=c('CartoDB.Positron','OpenStreetMap.HOT','Thunderforest.Transport','Esri.WorldImagery'))
+
 
     # to retain zoom if only types have been changed
     if (!is.null(zoom_view))
