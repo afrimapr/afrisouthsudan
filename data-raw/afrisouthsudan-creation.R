@@ -30,9 +30,11 @@ layernames <- layers$name
 
 sf1 <- st_read(filename, layer=layernames[1])
 
+library(mapview)
 mapview(sf1)
 
 # copied layer names & descriptions from googlesheet
+# https://docs.google.com/spreadsheets/d/1KTMOhQtcdkM7d8_XxGVmyb3N8K5rc6YDgsuMxWbqS6k/edit#gid=0
 
 # saved to inst\\extdata\\ssd-layer-description-lookup.csv
 # ssd_admn_ad0_py_s0_c19ihdp_pp,Country boundary
@@ -56,5 +58,35 @@ lookupname <- system.file("extdata","ssd-layer-description-lookup.csv", package=
 
 dflayers <- read.csv(lookupname)
 
+
+# trying to sort legends that present data values rather than pretty ranges
+# for adm1 layer (but not adm2 layer)
+layername <- 'ssd_admn_ad1_py_s0_c19ihdp_pp'
+sflayer <- sf::st_read(filename, layer=layername)
+mapview(sflayer, zcol='pop_61plus')
+
+#can sf read the layer_styles layer ? yes it is just a dataframe, does have all the layernames in
+layername <- 'layer_styles'
+sflayerstyles <- sf::st_read(filename, layer=layername)
+mapview(sflayer, zcol='pop_61plus')
+
+#checking new travel distance buffers
+layername <- 'ssd_tran_iso_py_s0_c19ihdp_pp_30min1m4kmbuf'
+sflayerbuf1 <- sf::st_read(filename, layer=layername)
+mapview(sflayerbuf1)
+
+layername <- 'ssd_tran_iso_py_s0_c19ihdp_pp_30min1km4kmbuf'
+sflayerbuf2 <- sf::st_read(filename, layer=layername)
+mapview(sflayerbuf2)
+
+# the colours on the map are correct it is just the legend that doesn't look good
+# seems to be a mapview issue, when there are <11 unique values
+# I submitted this to mapview & got it fixed
+breweries30 <- breweries[1:30,]
+breweries40 <- breweries[1:40,]
+mapview(breweries30, zcol = "number.of.types")
+mapview(breweries40, zcol = "number.of.types")
+length(unique(breweries30$number.of.types))
+length(unique(breweries40$number.of.types))
 
 
