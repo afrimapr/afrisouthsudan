@@ -15,6 +15,9 @@ filename <- system.file("extdata","ssd_ihdp_c19_s0_pp.gpkg", package="afrisouths
 zoom_view <- NULL
 # to allow current layer to be saved & accessed from different functions
 sfloadedlayer <- NULL
+sfadmin <- NULL
+sfadmin_sel <- NULL
+admin_names <- NULL
 layernum <- NULL
 layername <- NULL
 layertypecol <- NULL
@@ -31,6 +34,14 @@ function(input, output) {
   ######################################
   # mapview interactive leaflet map plot
   output$serve_map <- renderLeaflet({
+
+    cat("in serve_map()\n")
+
+    #if sfloadedlayer changes e.g. due to admin selection I would expect this to be triggered
+    #but doesn't seem to be
+    #adding a dependency on input$admin_names_selected mostly sorts it
+    cat("selected admin:", input$admin_names_selected,"\n")
+    #TODO fix occasional error that sfloadedlayer doesn't contain data
 
     #avoid problems at start
     #BEWARE I think this may have created issues
@@ -64,11 +75,25 @@ function(input, output) {
     #mapplot <- mapview(sfloadedlayer, zcol=zcol, label=label)
 
     #ARG!! it was working, now not, then yes, then not
-    #currently works in browser, but not direct from RStudio
+    #at one point worked in browser, but not direct from RStudio
+    #issues seemed to go away when I commented out this at start : if (is.null(sfloadedlayer)) return(NULL)
+
 
     mapplot <- mapview(sfloadedlayer, zcol=zcol, label=label,
                        layer.name=layer.name,
                        map.types=c('CartoDB.Positron','OpenStreetMap.HOT','Thunderforest.Transport','Esri.WorldImagery'))
+
+
+    #add admin polygons to the plot
+    if (input$admin_level != 'country')
+    {
+      if (input$admin_level == 'admin1') zcol <- "adm1_name"
+      else if (input$admin_level == 'admin2') zcol <- "adm2_name"
+
+      mapplot_to_add <- mapview::mapview(sfadmin_sel, zcol=zcol, color = "darkred", col.regions = "blue", alpha.regions=0.01, lwd = 2, legend=FALSE)
+
+      mapplot <- mapplot + mapplot_to_add
+    }
 
 
     # to retain zoom if only types have been changed
@@ -81,6 +106,43 @@ function(input, output) {
     #important that this returns the @map bit
     #otherwise get Error in : $ operator not defined for this S4 class
     mapplot@map
+
+  })
+
+  ################################################################################
+  # dynamic selectable list of admin regions - initially just allow one to be selected
+  output$select_admin <- renderUI({
+
+    if (input$admin_level != 'country')
+    {
+      cat("in select_admin()")
+
+      #I could select features rather than zoom view, but that wouldn't select from the table
+      #if I do select from the global sfloadedlayer object
+      #I will need to make sure to re-read the whole layer before doing any other selection
+      #that suggests that this selection should go on in the select_column() function
+
+      if (input$admin_level == "admin1")
+      {
+        admin_layername <- "ssd_admn_ad1_py_s0_c19ihdp_pp"
+        sfadmin <<- sf::st_read(filename, layer=admin_layername)
+        #filter just the selected regions, base to avoid dplyr dependency
+        #sfadmin_sel <- sfadmin[which(sfadmin$adm1_name%in%input$admin_names_selected),]
+        admin_names <<- sfadmin$adm1_name
+
+      } else if (input$admin_level == "admin2")
+      {
+        admin_layername <- "ssd_admn_ad2_py_s0_c19ihdp_pp"
+        sfadmin <<- sf::st_read(filename, layer=admin_layername)
+        #filter just the selected regions, base to avoid dplyr dependency
+        #sfadmin_sel <- sfadmin[which(sfadmin$adm2_name%in%input$admin_names_selected),]
+        admin_names <<- sfadmin$adm2_name
+      }
+
+      selectInput('admin_names_selected',label=NULL,
+                  choices=admin_names)
+
+    }
 
   })
 
@@ -103,9 +165,8 @@ function(input, output) {
     #avoid problems at start
     if (length(input$layercontent) == 0) return(NULL)
 
-    # TODO I should move this into another function
-    # e.g. currently if user changes layer while in the table
-    # table doesn't update
+    # because it is in this function
+    # the table should also update if user changes layer while in the table
     layernum <<- which(dflayers$content==input$layercontent)
     layername <<- dflayers$name[layernum]
     layertypecol <<- dflayers$type_column[layernum]
@@ -115,6 +176,43 @@ function(input, output) {
     sfloadedlayer <<- sf::st_read(filename, layer=layername)
 
     column_names <- names(sf::st_drop_geometry(sfloadedlayer))
+
+    #starting admin region selection
+    #using one of the 2 admin region layers stored in the geopackage
+    #have a UI element allowing selection by admin1 or 2
+    #TODO THIS NEEDS TO BE CONVERTED WON'T WORK YET
+
+    if (input$admin_level != 'country')
+    {
+      #cat("test")
+
+      #I could select features rather than zoom view, but that wouldn't select from the table
+      #if I do select from the global sfloadedlayer object
+      #I will need to make sure to re-read the whole layer before doing any other selection
+      #that suggests that this selection should go on in the select_column() function
+
+      if (input$admin_level == "admin1")
+      {
+        #admin_layername <- "ssd_admn_ad1_py_s0_c19ihdp_pp"
+        #sfadmin <<- sf::st_read(filename, layer=admin_layername)
+        #filter just the selected regions, base to avoid dplyr dependency
+        sfadmin_sel <<- sfadmin[which(sfadmin$adm1_name%in%input$admin_names_selected),]
+
+      } else if (input$admin_level == "admin2")
+      {
+        #admin_layername <- "ssd_admn_ad2_py_s0_c19ihdp_pp"
+        #sfadmin <<- sf::st_read(filename, layer=admin_layername)
+        #filter just the selected regions, base to avoid dplyr dependency
+        sfadmin_sel <<- sfadmin[which(sfadmin$adm2_name%in%input$admin_names_selected),]
+      }
+
+
+      #filter points that are within selected regions
+      #this returns sf # GOOD example to put in the BOOK (not obvious to me)
+      #https://geocompr.robinlovelace.net/spatial-operations.html
+      suppressWarnings(sfloadedlayer <<- sfloadedlayer[sfadmin_sel, ,op = st_within])
+    }
+
 
     radioButtons("column_selected", label = "data to display on map",
                  choices = column_names,
@@ -142,6 +240,9 @@ function(input, output) {
 
     #avoid problems at start
     if (length(input$layercontent) == 0) return(NULL)
+
+    #add dependency to make it respond to admin_selection
+    cat("in table_names() selected admin:", input$admin_names_selected,"\n")
 
     # drop the geometry column - not wanted in table
     sflayer <- sf::st_drop_geometry(sfloadedlayer)

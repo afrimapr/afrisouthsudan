@@ -31,8 +31,15 @@ fluidPage(
     sidebarPanel( width=3,
 
 
+                  radioButtons("admin_level", label = "select admin level",
+                               choices = c('country','admin1','admin2'),
+                               inline = TRUE, #horizontal
+                               selected = 'country'),
+
+                  uiOutput("select_admin"),
+
                   #user can select which layer to display
-                  #TODO consider allowing multiple layers to be selected
+                  #TODO consider allowing multiple layers to be selected, but would cause other issues
 
                   uiOutput("select_layer"),
 
