@@ -13,7 +13,6 @@ if(!require(afrisouthsudan)){
 library(mapview)
 
 
-#data(afcountries)
 
 fluidPage(
 
@@ -56,7 +55,7 @@ fluidPage(
                   #             selected = 1),
 
 
-                  p("active development July 2021, v0.3 ",
+                  p("active development July 2021, v0.4 ",
                     "Open source ", a("R code", href="https://github.com/afrimapr/afrisouthsudan", target="_blank")),
 
                   #p("Contact : ", a("@southmapr", href="https://twitter.com/southmapr", target="_blank")),
@@ -80,8 +79,9 @@ fluidPage(
       #tabs
       tabsetPanel(type = "tabs",
                   tabPanel("map", leafletOutput("serve_map", height=800)),
-                  tabPanel("table", DT::dataTableOutput("table_names")),
-                  tabPanel("about", htmlOutput("showabout")))
+                  tabPanel("table", DT::dataTableOutput("table_names")))
+                  #remove about tab for now
+                  #tabPanel("about", htmlOutput("showabout")))
 
     )
   )
