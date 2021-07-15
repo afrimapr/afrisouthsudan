@@ -35,13 +35,20 @@ function(input, output) {
   # mapview interactive leaflet map plot
   output$serve_map <- renderLeaflet({
 
-    cat("in serve_map()\n")
+    cat("in serve_map() nrow(sf)",nrow(sfloadedlayer),"\n")
 
     #if sfloadedlayer changes e.g. due to admin selection I would expect this to be triggered
     #but doesn't seem to be
     #adding a dependency on input$admin_names_selected mostly sorts it
     cat("selected admin:", input$admin_names_selected,"\n")
+
     #TODO fix occasional error that sfloadedlayer doesn't contain data
+    # if(!isTRUE(nrow(sfloadedlayer)>0))
+    # {
+    #   warning("no data in this admin area selection")
+    #   return(NULL)
+    # }
+
 
     #avoid problems at start
     #BEWARE I think this may have created issues

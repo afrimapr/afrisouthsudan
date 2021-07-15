@@ -17,14 +17,20 @@ library(mapview)
 
 fluidPage(
 
-  #headerPanel('afrimapr admin boundaries comparison tool'),
-  headerPanel(p( 'South Sudan mapviewer by',
-                 a("afrimapr", href="http://www.afrimapr.org", target="_blank")
-                 )),
+  headerPanel('South Sudan Integrated Humanitarian Data Package (IHDP) mapviewer'),
+  # headerPanel(p( 'South Sudan mapviewer by',
+  #                a("afrimapr", href="http://www.afrimapr.org", target="_blank")
+  #                )),
 
   # p("compare", a("geoBoundaries", href="https://www.geoboundaries.org/", target="_blank"),
   #   "&",       a("GADM", href="https://www.gadm.org/", target="_blank") ,
   #   "- may take a few seconds to download selected data"),
+
+  p("This is prototype application to view data collated by a MapAction pilot project concluding July 2021.\n"),
+
+  p("Select a layer on the left, choose to subset by admin region and which data to visualise.\n",
+    "Select tabs on the right to view the map or attribute data. In the map choose basemaps with layers icon at top left\n"
+    ),
 
   sidebarLayout(
 
@@ -50,7 +56,7 @@ fluidPage(
                   #             selected = 1),
 
 
-                  p("active development July 2021, v0.1 ",
+                  p("active development July 2021, v0.2 ",
                     "Open source ", a("R code", href="https://github.com/afrimapr/afrisouthsudan", target="_blank")),
 
                   #p("Contact : ", a("@southmapr", href="https://twitter.com/southmapr", target="_blank")),
