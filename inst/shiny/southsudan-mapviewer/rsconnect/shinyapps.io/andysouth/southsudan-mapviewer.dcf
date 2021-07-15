@@ -1,0 +1,12 @@
+name: southsudan-mapviewer
+title: southsudan-mapviewer
+username:
+account: andysouth
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4377432
+bundleId: 4821700
+url: https://andysouth.shinyapps.io/southsudan-mapviewer/
+when: 1626340445.06333
+asMultiple: FALSE
+asStatic: FALSE

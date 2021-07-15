@@ -80,7 +80,8 @@ fluidPage(
       #tabs
       tabsetPanel(type = "tabs",
                   tabPanel("map", leafletOutput("serve_map", height=800)),
-                  tabPanel("table", DT::dataTableOutput("table_names")))
+                  tabPanel("table", DT::dataTableOutput("table_names")),
+                  tabPanel("about", htmlOutput("showabout")))
 
     )
   )

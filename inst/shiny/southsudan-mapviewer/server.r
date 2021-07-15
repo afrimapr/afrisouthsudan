@@ -10,6 +10,7 @@ lookupname <- system.file("extdata","ssd-layer-description-lookup.csv", package=
 dflayers <- read.csv(lookupname)
 
 filename <- system.file("extdata","ssd_ihdp_c19_s0_pp.gpkg", package="afrisouthsudan", mustWork=TRUE)
+html_about_name <- system.file("extdata/ssd_ihdp_c19_s0_pp_narrative","ssd_ihdp_c19_s0_pp_narrative.html", package="afrisouthsudan", mustWork=TRUE)
 
 # to try to allow retaining of map zoom, when selections are changed
 zoom_view <- NULL
@@ -257,6 +258,17 @@ function(input, output) {
     DT::datatable(sflayer, options = list(pageLength = 50))
   })
 
+  ###########################
+  # display HTML file containing about text
+  # (html downloaded from a google doc & saved in package)
+  # name defined above so that in same place as other filenames & easy to alter to local
+
+  output$showabout <- renderUI({
+
+    #TODO why do neither of these work to display images ?
+    includeHTML(html_about_name)
+    #HTML(readLines(html_about_name))
+  })
 
 
 
