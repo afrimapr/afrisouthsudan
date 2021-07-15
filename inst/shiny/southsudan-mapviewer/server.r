@@ -185,10 +185,14 @@ function(input, output) {
 
     column_names <- names(sf::st_drop_geometry(sfloadedlayer))
 
-    #starting admin region selection
+    #admin region selection
     #using one of the 2 admin region layers stored in the geopackage
-    #have a UI element allowing selection by admin1 or 2
-    #TODO THIS NEEDS TO BE CONVERTED WON'T WORK YET
+
+    #I want to stop admin region selection for the mapbox buffer layers
+    #it fails because the layers are a single shape & do not fall within subnational areas
+    #note admin region selection doesn't work great for roads/rivers either
+    avoid_selection <- layername%in%c("ssd_tran_iso_py_s0_c19ihdp_pp_30min1m4kmbuf",
+                                      "ssd_tran_iso_py_s0_c19ihdp_pp_30min1km4kmbuf")
 
     if (input$admin_level != 'country')
     {
@@ -216,9 +220,23 @@ function(input, output) {
 
 
       #filter points that are within selected regions
-      #this returns sf # GOOD example to put in the BOOK (not obvious to me)
+      #this returns sf
       #https://geocompr.robinlovelace.net/spatial-operations.html
-      suppressWarnings(sfloadedlayer <<- sfloadedlayer[sfadmin_sel, ,op = st_within])
+      ## Spherical geometry (s2) switched off, to try to avoid error on healthsites buffer layers
+      sf::sf_use_s2(FALSE)
+
+      #now get problem Error in : sfloadedlayer does not contain data
+      #on admin region selection from the buffer layers
+      #I think because they are one shape & do not occur within the admin polygons
+      #perhaps an option would be to try st_overlaps instead of st_within ??
+      #st_overlaps does do what I want for the buffer shape - but doesn't work for points. doh!
+
+      if (!avoid_selection)
+      {
+        suppressWarnings(sfloadedlayer <<- sfloadedlayer[sfadmin_sel, ,op = st_within])
+      }
+
+      #suppressWarnings(sfloadedlayer <<- sfloadedlayer[sfadmin_sel, ,op = st_intersects()])
     }
 
 
