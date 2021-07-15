@@ -56,7 +56,7 @@ fluidPage(
                   #             selected = 1),
 
 
-                  p("active development July 2021, v0.2 ",
+                  p("active development July 2021, v0.3 ",
                     "Open source ", a("R code", href="https://github.com/afrimapr/afrisouthsudan", target="_blank")),
 
                   #p("Contact : ", a("@southmapr", href="https://twitter.com/southmapr", target="_blank")),
