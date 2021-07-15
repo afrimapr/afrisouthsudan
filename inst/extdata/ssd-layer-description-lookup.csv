@@ -1,7 +1,4 @@
 name,content,description,type_column,label_column
-ssd_admn_ad0_py_s0_c19ihdp_pp,Country boundary,Country (adm0) boundary,adm0_name,adm0_name
-ssd_admn_ad1_py_s0_c19ihdp_pp,State boundary,State (adm1) boundary,pop_61plus,adm1_name
-ssd_admn_ad2_py_s0_c19ihdp_pp,County boundary,County (adm2) boundary,pop_61plus,adm2_name
 ssd_tran_air_pt_s0_c19ihdp_pp,Airports,Airports,type,name
 ssd_heal_med_pt_s0_c19ihdp_pp,Health facilities,Medical facilities,local_type,local_name
 ssd_tran_net_ln_s0_c19ihdp_pp,Major roads & rivers,Major roads and rivers,type,name
@@ -14,3 +11,6 @@ ssd_tran_poi_pt_s0_c19ihdp_pp,Transport points,Transport points of interest,type
 ssd_tran_air_ln_s0_c19ihdp_pp_unhas,UN air routes,United Nations humanitarian air service routes,operatedby,name
 ssd_tran_iso_py_s0_c19ihdp_pp_30min1m4kmbuf,healthsites within 4km or 30 minute drive, 30 minute drive time to health facilities buffered 1m plus 4km facility buffer,id,NULL
 ssd_tran_iso_py_s0_c19ihdp_pp_30min1km4kmbuf,healthsites within 4km or 30 minute drive+1km buffer,30 minute drive time to health facilities buffered 1km plus 4km facility buffer,id,NULL
+ssd_admn_ad0_py_s0_c19ihdp_pp,Country boundary,Country (adm0) boundary,adm0_name,adm0_name
+ssd_admn_ad1_py_s0_c19ihdp_pp,State boundary,State (adm1) boundary,pop_61plus,adm1_name
+ssd_admn_ad2_py_s0_c19ihdp_pp,County boundary,County (adm2) boundary,pop_61plus,adm2_name
